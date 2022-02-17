@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Res } from '@nestjs/common';
 import { CreateMensajeDto } from './dto/create-mensaje-dto';
 import { MensajesService } from './mensajes.service';
 
