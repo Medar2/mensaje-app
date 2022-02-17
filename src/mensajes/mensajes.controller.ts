@@ -1,28 +1,46 @@
-import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Res } from '@nestjs/common';
 import { CreateMensajeDto } from './dto/create-mensaje-dto';
+import { MensajesService } from './mensajes.service';
 
 @Controller('mensajes')
 export class MensajesController {
 
+    constructor(private mensajeService: MensajesService) { }
+
     @Post()
-    create(@Body() createMensajeDto: CreateMensajeDto) {
-        return 'This action adds a new mensaje';
+    create(@Body() createMensajeDto: CreateMensajeDto,@Res() response) {
+        this.mensajeService.createMensaje(createMensajeDto).then(mensaje => {
+            response.status(201).json(mensaje);
+        }).catch(() => {
+            response.status(400).json({error: 'Error al crear el mensaje'});
+        });
     }
 
     @Get()
-    gerAll() {
-        return 'This action returns all mensajes';
+    gerAll(@Res() response) {
+        this.mensajeService.getAll().then(mensajes => {
+            response.status(201).json(mensajes);
+        }).catch(() => {
+            response.status(400).json({error: 'Error al buscar el mensaje'});
+        });
     }
     
     @Put(':id')
-    update(@Body() createMensajeDto: CreateMensajeDto) {
-        return 'This action updates a mensaje';
+    update(@Body() createMensajeDto: CreateMensajeDto, @Res() response, @Param('id') idMensaje: number) {
+        this.mensajeService.updateMensaje(idMensaje,createMensajeDto).then(mensaje => {
+            response.status(201).json(mensaje);
+        }).catch(() => {
+            response.status(400).json({error: 'Error al actualizar el mensaje'});
+        });
     }
+     
 
     @Delete(':id')
-    delete() {
-        return 'This action removes a mensaje';
+    delete( @Res() response, @Param('id') idMensaje) {
+        this.mensajeService.deleteMensaje(idMensaje).then(mensaje => {
+            response.status(201).json(mensaje);
+        }).catch(() => {
+            response.status(400).json({error: 'Error al eliminar el mensaje'});
+        });
     }
-
-
 }
